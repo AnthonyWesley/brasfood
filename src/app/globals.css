@@ -1,26 +1,110 @@
 @import "tailwindcss";
 
+/* Brasfood — claro e premium. Base off-white quente, blocos arredondados ("bento"),
+   verde-bandeira profundo como cor da marca, amarelo para destaque pontual e um carvão
+   para os painéis escuros. Sem tema escuro: é um site comercial de luz. */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --bg: #f4f2eb;
+  --surface: #ffffff;
+  --surface-2: #ebe8de;
+  --ink: #1b1d19;
+  --ink-soft: #3b3f37;
+  --muted: #676c61;
+  --line: #dedad0;
+
+  --brand: #17633a;
+  --brand-strong: #0f4a2a;
+  --brand-soft: #dcebdf;
+  --accent: #f2c230;
+  --accent-soft: #fbefc4;
+  --charcoal: #24272a;
+
+  --danger: #b42318;
+  --danger-soft: #fde7e5;
+  --info: #1d4ed8;
+  --info-soft: #e1e9fd;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-charcoal: var(--charcoal);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-figtree);
+
+  --radius-card: 1.75rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* @utility (e não @layer components) para poderem ser combinadas com @apply */
+@utility container-site {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility card {
+  @apply rounded-[var(--radius-card)] bg-surface;
+}
+
+@utility eyebrow {
+  @apply text-xs font-semibold tracking-[0.18em] text-brand uppercase;
+}
+
+@utility btn {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-strong;
+}
+@utility btn-dark {
+  @apply btn bg-charcoal text-white hover:bg-ink;
+}
+@utility btn-light {
+  @apply btn bg-surface text-ink ring-1 ring-line hover:bg-surface-2;
+}
+@utility btn-accent {
+  @apply btn bg-accent text-ink hover:brightness-95;
+}
+
+@utility field {
+  @apply min-h-11 w-full rounded-xl border border-line bg-surface px-3.5 text-sm text-ink placeholder:text-muted/80 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 aria-invalid:border-danger aria-invalid:focus:ring-danger/20;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-ink-soft;
 }

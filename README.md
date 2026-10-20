@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Brasfood — site e portal B2B (front-end)
 
-## Getting Started
+Site institucional + portal de atacado da Brasfood (brasfood.co.uk). Next.js 16 (App Router,
+Cache Components) + Tailwind CSS 4. **Esta etapa é só o front**: os dados vêm de
+`src/lib/sample-data.ts` e ficam em memória até o backend Node + PostgreSQL existir.
 
-First, run the development server:
+## Rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Contas de teste (só existem nos dados de exemplo): veja `users` em `src/lib/sample-data.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Rotas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rota | Quem vê | O que tem |
+| --- | --- | --- |
+| `/`, `/about`, `/products`, `/contact`, `/privacy` | público | site institucional; a prévia de produtos não mostra código, embalagem nem preço |
+| `/become-a-customer` | público | cadastro da empresa → fica **pendente** |
+| `/login` | público | login; cadastro pendente/recusado recebe mensagem própria |
+| `/catalogue`, `/catalogue/[slug]`, `/account` | cliente aprovado | catálogo com busca, categorias, marca, temperatura e ficha do produto |
+| `/admin/*` | admin | aprovação de cadastros, produtos (criar/editar/ocultar), categorias, clientes |
 
-## Learn More
+## Segurança
 
-To learn more about Next.js, take a look at the following resources:
+- Sessão em JWT (HS256, `jose`) num cookie `httpOnly`, assinado com `SESSION_SECRET`.
+- `src/proxy.ts` redireciona cedo quem não tem sessão, mas **a checagem que vale** é
+  `requireCustomer()` / `requireAdmin()` (`src/lib/session.ts`), chamada junto de cada leitura
+  de dado restrito e no início de toda Server Action.
+- Quando o backend existir, ele confere o mesmo JWT em cada endpoint: o catálogo privado é
+  protegido na API, não só escondido no front.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Ligar no backend
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Cada função de `src/lib/api.ts` corresponde a um endpoint (comentado acima dela). Troque o
+corpo por um `fetch(`${process.env.API_URL}/...`)` com o token da sessão; páginas e formulários
+não mudam.
 
-## Deploy on Vercel
+## Pendências com a Brasfood
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Preço no portal:** `PORTAL_SHOW_PRICES=true` mostra o preço por caixa. Falta decidir.
+- Logo oficial (SVG) e fotos dos produtos — hoje os produtos mostram o ícone da categoria.
+- Textos de "About us" (história, datas, capacidade) marcados como `A CONFIRMAR`.
+- Política de privacidade é rascunho: revisar para o UK GDPR antes de publicar.
+- Serviço de e-mail transacional: `src/lib/email.ts` hoje só escreve no log.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy (Coolify)
+
+- Build Pack: **Dockerfile**. Porta: **3000**.
+- Variáveis (runtime, não precisam ser "Build Variable"): `SESSION_SECRET` (obrigatória),
+  `PORTAL_SHOW_PRICES`, `ADMIN_NOTIFY_EMAIL`. Modelo em `.env.example`.
+- Uma instância só enquanto os dados forem em memória.
