@@ -34,7 +34,7 @@ async function ProductTable({ searchParams }: { searchParams: PageProps<"/admin/
   return (
     <>
       {saved && (
-        <p role="status" className="mt-4 flex items-center gap-2 rounded-2xl bg-brand-soft p-4 text-sm text-brand-strong">
+        <p role="status" className="mt-4 flex items-center gap-2 rounded-2xl bg-success-soft p-4 text-sm text-success">
           <CircleCheck className="size-4" aria-hidden="true" />
           Product saved.
         </p>

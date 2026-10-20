@@ -2,6 +2,7 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import type { Category } from "@/lib/types";
+import { BrandMark } from "./logo";
 
 export function SiteFooter({ categories }: { categories: Pick<Category, "slug" | "name">[] }) {
   const columns = [
@@ -32,12 +33,7 @@ export function SiteFooter({ categories }: { categories: Pick<Category, "slug" |
       <div className="container-site grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.3fr]">
         <div>
           <p className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-xl bg-accent">
-              <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
-                <path d="M12 3 21 12 12 21 3 12Z" fill="var(--charcoal)" />
-                <circle cx="12" cy="12" r="4.2" fill="var(--accent)" />
-              </svg>
-            </span>
+            <BrandMark />
             <span className="text-lg font-extrabold tracking-[0.08em]">BRASFOOD</span>
           </p>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/65">{site.description}</p>

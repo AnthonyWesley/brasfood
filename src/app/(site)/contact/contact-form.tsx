@@ -14,7 +14,7 @@ export function ContactForm() {
     return (
       <div className="card grid place-items-center p-10 text-center" role="status">
         <div>
-          <CircleCheck className="mx-auto size-12 text-brand" aria-hidden="true" />
+          <CircleCheck className="mx-auto size-12 text-success" aria-hidden="true" />
           <h2 className="mt-4 text-2xl font-extrabold">Message sent</h2>
           <p className="mt-2 text-muted">Thanks for getting in touch. We&apos;ll reply within one working day.</p>
         </div>

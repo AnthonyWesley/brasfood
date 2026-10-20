@@ -4,7 +4,7 @@ import type { ProductBadge, RegistrationStatus, Storage } from "@/lib/types";
 
 const storageStyle: Record<Storage, { icon: typeof Snowflake; className: string }> = {
   frozen: { icon: Snowflake, className: "bg-info-soft text-info" },
-  chilled: { icon: Refrigerator, className: "bg-brand-soft text-brand-strong" },
+  chilled: { icon: Refrigerator, className: "bg-[#ddf1ee] text-[#0f6b5e]" },
   ambient: { icon: Sun, className: "bg-accent-soft text-[#7a5a00]" },
 };
 
@@ -31,7 +31,7 @@ export function ProductBadgeTag({ badge }: { badge: ProductBadge }) {
 
 const statusStyle: Record<RegistrationStatus, { label: string; className: string }> = {
   pending: { label: "Pending review", className: "bg-accent-soft text-[#7a5a00]" },
-  approved: { label: "Approved", className: "bg-brand-soft text-brand-strong" },
+  approved: { label: "Approved", className: "bg-success-soft text-success" },
   rejected: { label: "Rejected", className: "bg-danger-soft text-danger" },
 };
 

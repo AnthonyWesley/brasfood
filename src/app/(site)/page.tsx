@@ -1,9 +1,9 @@
 import { ArrowRight, BadgeCheck, Globe, ShieldCheck, Snowflake, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ProductCard, PromoBanner, SectionHeader } from "@/components/storefront";
+import { FeatureList, PartnersStrip, ProductCard, PromoBanner, SectionHeader, TeamGrid } from "@/components/storefront";
 import { getCategories, getPublicProducts } from "@/lib/api";
-import { faqs, partners, site, team } from "@/lib/site";
+import { faqs, site } from "@/lib/site";
 import type { Category, PublicProduct } from "@/lib/types";
 import { RangeTabs } from "./range-tabs";
 
@@ -60,7 +60,7 @@ export default async function HomePage() {
           {categories.map((c) => (
             <li key={c.id} className="shrink-0">
               <Link href={`/products?category=${c.slug}`} className="group flex w-28 flex-col items-center gap-3 text-center lg:w-auto">
-                <span className="relative size-24 overflow-hidden rounded-full bg-surface-2 ring-1 ring-line transition-shadow group-hover:ring-2 group-hover:ring-brand md:size-28">
+                <span className="relative size-24 overflow-hidden rounded-full bg-white ring-1 ring-line transition-shadow group-hover:ring-2 group-hover:ring-brand md:size-28">
                   {c.image && <Image src={c.image} alt="" fill sizes="112px" className="object-contain p-3" />}
                 </span>
                 <span className="text-sm font-semibold group-hover:text-brand">{c.name}</span>
@@ -79,7 +79,7 @@ export default async function HomePage() {
       {/* ---------- par de banners ---------- */}
       <section className="container-site mt-16 grid gap-4 lg:grid-cols-2" aria-label="Promotions">
         <PromoBanner
-          tone="lime"
+          tone="yellow"
           title={<>Açaí all year round</>}
           text="Mais Fruta and Tastecraft açaí with guaraná, from 200 ml cups to 3.6 kg tubs."
           href="/products?category=acai"
@@ -88,7 +88,7 @@ export default async function HomePage() {
           imageAlt="Açaí cream tubs in several sizes"
         />
         <PromoBanner
-          tone="red"
+          tone="brasil"
           title={<>Ten tropical fruit pulps</>}
           text="Maracujá, açaí, cupuaçu, manga, caju, graviola and more — 5 x 400 g packs."
           href="/products?category=fruit-pulp"
@@ -104,21 +104,7 @@ export default async function HomePage() {
         <RangeTabs categories={categories} products={products} />
       </section>
 
-      {/* ---------- parceiros ---------- */}
-      <section className="mt-16 bg-surface-2 py-12" aria-labelledby="partners">
-        <div className="container-site">
-          <h2 id="partners" className="text-center text-2xl font-bold">
-            Trusted by Brazilian butchers and grocers across the UK
-          </h2>
-          <ul className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-7">
-            {partners.map((p) => (
-              <li key={p.name} className="grid h-28 place-items-center rounded-2xl bg-white p-4 ring-1 ring-line">
-                <Image src={p.logo} alt={p.name} width={160} height={96} className="max-h-20 w-auto object-contain opacity-90 grayscale transition hover:opacity-100 hover:grayscale-0" />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <PartnersStrip />
 
       {/* ---------- destaque: açougue ---------- */}
       <section className="container-site mt-16" aria-labelledby="butcher">
@@ -143,24 +129,14 @@ export default async function HomePage() {
 
       {/* ---------- diferenciais ---------- */}
       <section className="container-site mt-16" aria-label="Why Brasfood">
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
+        <FeatureList
+          items={[
             { icon: Snowflake, title: "Cold-chain delivery", text: "Frozen and chilled goods kept at temperature from our warehouse to yours." },
             { icon: ShieldCheck, title: "Trade-only pricing", text: "Prices and pack sizes for approved business customers." },
             { icon: Globe, title: "Imported direct", text: "The brands Brazilian and Portuguese customers already know." },
             { icon: Truck, title: "London & UK-wide", text: "London routes, plus nationwide delivery quoted with your invoice." },
-          ].map(({ icon: Icon, title, text }) => (
-            <li key={title} className="flex gap-4 rounded-2xl p-5 ring-2 ring-accent">
-              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-accent-soft text-brand">
-                <Icon className="size-6" aria-hidden="true" />
-              </span>
-              <div>
-                <h3 className="font-bold">{title}</h3>
-                <p className="mt-1 text-sm text-muted">{text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+          ]}
+        />
       </section>
 
       {/* ---------- congelados e mandioca ---------- */}
@@ -169,30 +145,8 @@ export default async function HomePage() {
         <ProductRow products={inCategory("frozen", "cassava")} categoryOf={categoryOf} />
       </section>
 
-      {/* ---------- equipe (no lugar dos depoimentos) ---------- */}
-      <section className="mt-16 bg-surface-2 py-14" aria-labelledby="team">
-        <div className="container-site">
-          <h2 id="team" className="text-center text-2xl font-bold md:text-3xl">
-            The people behind your orders
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-muted">
-            A small London team that knows the products — and knows your customers.
-          </p>
-          <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {team.map((person) => (
-              <li key={person.name} className="card overflow-hidden rounded-2xl">
-                <div className="relative aspect-[4/5] bg-surface-2">
-                  <Image src={person.photo} alt={person.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover object-top" />
-                </div>
-                <div className="p-4">
-                  <p className="font-bold">{person.name}</p>
-                  <p className="text-sm text-muted">{person.role}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* equipe no lugar dos depoimentos: o site atual não tem depoimentos de clientes */}
+      <TeamGrid />
 
       {/* ---------- banner largo ---------- */}
       <section className="container-site mt-16 grid gap-4 lg:grid-cols-[1.6fr_1fr]" aria-label="Open an account">

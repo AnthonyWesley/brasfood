@@ -1,28 +1,33 @@
 @import "tailwindcss";
 
-/* Brasfood v2 — vitrine no estilo Freshora: fundo branco, cards com borda fina,
-   verde-escuro da marca, verde-limão para destaque e seções alternando com um cinza-verde
-   bem claro. Sem tema escuro: é um site comercial de luz. */
+/* Brasfood v2 — vitrine no estilo Freshora com as cores da marca Brasfood: o vermelho do
+   "B" do logo (#cd2122, o mesmo do brasfood.co.uk), amarelo de destaque e grafite quente no
+   rodapé. Fundo da página branco; cinza bem claro só em detalhes. "success" é o verde de
+   "aprovado/salvo", separado do vermelho da marca para não parecer erro. Sem tema escuro.
+   Obs.: o @tailwindcss/turbopack às vezes não recompila sozinho no `next dev`; se a cor não
+   mudar, salve este arquivo de novo ou apague a pasta .next. */
 
 :root {
   color-scheme: light;
 
   --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f3f6f1;
-  --ink: #14211b;
-  --ink-soft: #34433b;
-  --muted: #66736b;
-  --line: #e2e8e1;
+  --surface-2: #f6f4f3;
+  --ink: #1f1a1a;
+  --ink-soft: #3d3534;
+  --muted: #6d6563;
+  --line: #ebe6e4;
 
-  --brand: #0e4d36;
-  --brand-strong: #093826;
-  --brand-soft: #e2efe6;
-  --accent: #a6d14b;
-  --accent-soft: #eff7dc;
-  --charcoal: #0c2a1e;
+  --brand: #cd2122;
+  --brand-strong: #a8191a;
+  --brand-soft: #fbe7e6;
+  --accent: #f6c339;
+  --accent-soft: #fff5d9;
+  --charcoal: #241f20;
 
-  --danger: #d93f3f;
+  --success: #1f7a3d;
+  --success-soft: #e3f2e7;
+  --danger: #b42318;
   --danger-soft: #fde8e7;
   --info: #1d5fd8;
   --info-soft: #e3ebfd;
@@ -42,6 +47,8 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-charcoal: var(--charcoal);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-info: var(--info);

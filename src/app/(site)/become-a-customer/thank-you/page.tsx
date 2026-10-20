@@ -8,7 +8,7 @@ export default function ThankYouPage() {
   return (
     <div className="container-site pt-10">
       <div className="card mx-auto max-w-2xl p-8 text-center md:p-14">
-        <span className="mx-auto grid size-16 place-items-center rounded-full bg-brand-soft text-brand">
+        <span className="mx-auto grid size-16 place-items-center rounded-full bg-success-soft text-success">
           <CircleCheck className="size-8" aria-hidden="true" />
         </span>
         <h1 className="mt-6 text-3xl font-extrabold">Thanks — we&apos;ve got your request</h1>

@@ -34,7 +34,7 @@ export function SiteHeader({ categories }: { categories: Pick<Category, "slug" |
             type="search"
             name="q"
             placeholder="Search for products, e.g. açaí, linguiça, queijo"
-            className="field rounded-full border-transparent bg-surface-2 pr-12 pl-5"
+            className="field rounded-full bg-white pr-12 pl-5"
           />
           <button type="submit" className="absolute top-1/2 right-1.5 grid size-9 -translate-y-1/2 place-items-center rounded-full bg-brand text-white hover:bg-brand-strong">
             <Search className="size-4" aria-hidden="true" />
@@ -118,7 +118,7 @@ export function SiteHeader({ categories }: { categories: Pick<Category, "slug" |
               <label htmlFor="mobile-search" className="sr-only">
                 Search products
               </label>
-              <input id="mobile-search" type="search" name="q" placeholder="Search products" className="field rounded-full bg-surface-2 pl-5" />
+              <input id="mobile-search" type="search" name="q" placeholder="Search products" className="field rounded-full bg-white pl-5" />
             </form>
             {publicNav.map((item) => (
               <Link
