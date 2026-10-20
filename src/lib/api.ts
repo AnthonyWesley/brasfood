@@ -39,16 +39,19 @@ export async function getCategories(): Promise<Category[]> {
   return db.categories;
 }
 
-const toPublic = ({ id, name, brand, categoryId, storage, image }: Product): PublicProduct => ({
+const toPublic = ({ id, slug, name, brand, categoryId, storage, unit, image, featured }: Product): PublicProduct => ({
   id,
+  slug,
   name,
   brand,
   categoryId,
   storage,
+  unit,
   image,
+  featured,
 });
 
-/** GET /public/products — só nome, marca, categoria e foto. */
+/** GET /public/products — nome, marca, categoria, unidade e foto; nada comercial. */
 export async function getPublicProducts(options: { featuredOnly?: boolean } = {}): Promise<PublicProduct[]> {
   return db.products.filter((p) => p.visible && (!options.featuredOnly || p.featured)).map(toPublic);
 }
@@ -57,7 +60,7 @@ export async function getCatalogueStats() {
   const visible = db.products.filter((p) => p.visible);
   return {
     products: visible.length,
-    brands: new Set(visible.map((p) => p.brand)).size,
+    brands: new Set(visible.map((p) => p.brand).filter(Boolean)).size,
     categories: db.categories.length,
   };
 }
@@ -83,9 +86,9 @@ export async function getCatalogue(_user: SessionUser, filters: CatalogueFilters
       (!category || p.categoryId === category.id) &&
       (!filters.brand || p.brand === filters.brand) &&
       (!filters.storage || p.storage === filters.storage) &&
-      (!needle || normalize(`${p.name} ${p.brand} ${p.code}`).includes(needle)),
+      (!needle || normalize(`${p.name} ${p.brand ?? ""} ${p.code}`).includes(needle)),
   );
-  const brands = [...new Set(db.products.filter((p) => p.visible).map((p) => p.brand))].sort();
+  const brands = [...new Set(db.products.filter((p) => p.visible).map((p) => p.brand))].filter((b) => b !== null).sort();
   return { items, brands, category: category ?? null };
 }
 
@@ -262,7 +265,7 @@ export async function createCategory(name: string, description: string): Promise
   const slug = sample.slugify(name);
   if (!slug) return { ok: false, error: "Enter a name." };
   if (db.categories.some((c) => c.slug === slug)) return { ok: false, error: "This category already exists." };
-  db.categories.push({ id: `c${Date.now()}`, slug, name, description, icon: "grocery" });
+  db.categories.push({ id: slug, slug, name, namePt: name, description, icon: "grocery", banner: null, image: null });
   return { ok: true };
 }
 

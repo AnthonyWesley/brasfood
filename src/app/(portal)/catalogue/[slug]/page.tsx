@@ -56,13 +56,13 @@ async function ProductDetails({ params }: { params: PageProps<"/catalogue/[slug]
         </div>
         <div className="card flex flex-col p-6 md:p-10">
           <p className="text-sm font-medium text-muted">
-            {category?.name} · {product.brand}
+            {[category?.name, product.brand].filter(Boolean).join(" · ")}
           </p>
           <h1 className="mt-2 text-3xl leading-tight font-extrabold md:text-4xl">{product.name}</h1>
           <div className="mt-4">
             <StorageTag storage={product.storage} />
           </div>
-          <p className="mt-6 leading-relaxed text-ink-soft">{product.description}</p>
+          {product.description && <p className="mt-6 leading-relaxed text-ink-soft">{product.description}</p>}
 
           <dl className="mt-8 grid grid-cols-2 gap-3">
             {specs.map(({ icon: Icon, label, value }) => (

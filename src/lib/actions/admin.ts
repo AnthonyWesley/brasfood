@@ -48,7 +48,6 @@ export async function submitProduct(_prev: FormState, formData: FormData): Promi
   const errors: Record<string, string> = {};
   if (!values.code) errors.code = "Enter the product code.";
   if (!values.name) errors.name = "Enter the product name.";
-  if (!values.brand) errors.brand = "Enter the brand.";
   if (!values.categoryId) errors.categoryId = "Choose a category.";
   if (!storages.includes(values.storage as Storage)) errors.storage = "Choose how it's stored.";
   if (!values.unit) errors.unit = "Enter the unit, e.g. 1 kg.";
@@ -61,7 +60,7 @@ export async function submitProduct(_prev: FormState, formData: FormData): Promi
   const input: ProductInput = {
     code: values.code.toUpperCase(),
     name: values.name,
-    brand: values.brand,
+    brand: values.brand || null,
     categoryId: values.categoryId,
     storage: values.storage as Storage,
     unit: values.unit,

@@ -171,7 +171,7 @@ async function Catalogue({ searchParams }: { searchParams: PageProps<"/catalogue
                       </Link>
                     </h2>
                     <p className="mt-1 text-xs text-muted">
-                      {product.brand} · {product.unit}
+                      {[product.brand, product.unit].filter(Boolean).join(" · ")}
                     </p>
                     <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
                       <StorageTag storage={product.storage} />

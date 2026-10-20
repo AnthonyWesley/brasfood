@@ -1,8 +1,14 @@
 # Brasfood — site e portal B2B (front-end)
 
 Site institucional + portal de atacado da Brasfood (brasfood.co.uk). Next.js 16 (App Router,
-Cache Components) + Tailwind CSS 4. **Esta etapa é só o front**: os dados vêm de
-`src/lib/sample-data.ts` e ficam em memória até o backend Node + PostgreSQL existir.
+Cache Components) + Tailwind CSS 4. **Esta etapa é só o front**: os dados ficam em memória até o
+backend Node + PostgreSQL existir.
+
+**v2** (branch `v2`): vitrine no estilo Freshora com o **catálogo real** da loja atual — 58 produtos,
+7 categorias e as fotos, gerados da API WooCommerce do brasfood.co.uk em `src/lib/catalog-data.ts`.
+Banners, logos de parceiros e fotos da equipe também vêm do site atual, otimizados em WebP em
+`public/images/` (2,8 MB no total). Cadastros e contas de teste continuam fictícios
+(`src/lib/sample-data.ts`).
 
 ## Rodar
 
@@ -41,7 +47,11 @@ não mudam.
 ## Pendências com a Brasfood
 
 - **Preço no portal:** `PORTAL_SHOW_PRICES=true` mostra o preço por caixa. Falta decidir.
-- Logo oficial (SVG) e fotos dos produtos — hoje os produtos mostram o ícone da categoria.
+- Logo oficial em SVG (o site atual só tem um PNG branco de 200 px).
+- Conferir no catálogo gerado: marca, unidade/embalagem e temperatura foram deduzidas do nome e da foto;
+  os códigos `BFnnnn` são o id da loja atual até existir o código oficial.
+- Erros que vieram do site atual: a descrição da Coxinha de Galinha fala de "Pastel de Bacalhau", e as
+  8 linguiças usam a mesma foto (Toscana).
 - Textos de "About us" (história, datas, capacidade) marcados como `A CONFIRMAR`.
 - Política de privacidade é rascunho: revisar para o UK GDPR antes de publicar.
 - Serviço de e-mail transacional: `src/lib/email.ts` hoje só escreve no log.

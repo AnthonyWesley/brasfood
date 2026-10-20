@@ -60,7 +60,7 @@ async function ProductTable({ searchParams }: { searchParams: PageProps<"/admin/
                 <td className="px-5 py-3">
                   <p className="font-semibold text-ink">{p.name}</p>
                   <p className="text-xs text-muted">
-                    {p.brand} · {p.unit} · {p.packaging}
+                    {[p.brand, p.unit, p.packaging].filter(Boolean).join(" · ")}
                   </p>
                 </td>
                 <td className="px-5 py-3">{categoryName.get(p.categoryId) ?? "—"}</td>

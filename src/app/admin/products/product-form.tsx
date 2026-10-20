@@ -31,7 +31,7 @@ export function ProductForm({ product, categories }: { product: Product | null; 
         <FormField name="name" label="Name" error={errors.name} className="md:col-span-2">
           {(p) => <input {...p} name="name" defaultValue={value("name")} className="field" />}
         </FormField>
-        <FormField name="brand" label="Brand" error={errors.brand}>
+        <FormField name="brand" label={<>Brand <span className="font-normal text-muted">(optional)</span></>} error={errors.brand}>
           {(p) => <input {...p} name="brand" defaultValue={value("brand")} className="field" />}
         </FormField>
         <FormField name="categoryId" label="Category" error={errors.categoryId}>

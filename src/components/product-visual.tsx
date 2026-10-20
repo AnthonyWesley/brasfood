@@ -8,6 +8,7 @@ import {
   ShoppingBasket,
   Soup,
   Cookie,
+  IceCreamBowl,
   Wheat,
   type LucideIcon,
 } from "lucide-react";
@@ -25,6 +26,7 @@ export const categoryIcons: Record<CategoryIcon, LucideIcon> = {
   snack: Cookie,
   drink: CupSoda,
   grocery: ShoppingBasket,
+  dessert: IceCreamBowl,
 };
 
 // Tons por categoria para os quadros sem foto: o catálogo continua legível e variado
@@ -40,6 +42,7 @@ const tints: Record<CategoryIcon, string> = {
   snack: "bg-[#f2e3cf] text-[#94571b]",
   drink: "bg-[#dfece4] text-[#1f6a42]",
   grocery: "bg-[#e5e9dc] text-[#4f6526]",
+  dessert: "bg-[#ece0ee] text-[#6b2a6e]",
 };
 
 export function CategoryIconBadge({ icon, className = "" }: { icon: CategoryIcon; className?: string }) {

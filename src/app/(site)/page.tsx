@@ -1,244 +1,300 @@
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BadgeCheck,
-  Globe,
-  Lock,
-  Snowflake,
-  Store,
-  Truck,
-  UtensilsCrossed,
-  Warehouse,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, Globe, ShieldCheck, Snowflake, Truck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { StorageTag } from "@/components/badges";
-import { CategoryIconBadge, ProductVisual } from "@/components/product-visual";
+import { ProductCard, PromoBanner, SectionHeader } from "@/components/storefront";
 import { getCategories, getPublicProducts } from "@/lib/api";
-import { site } from "@/lib/site";
-import { businessTypes } from "@/lib/types";
+import { faqs, partners, site, team } from "@/lib/site";
+import type { Category, PublicProduct } from "@/lib/types";
+import { RangeTabs } from "./range-tabs";
 
 export default async function HomePage() {
-  const [categories, featured] = await Promise.all([getCategories(), getPublicProducts({ featuredOnly: true })]);
-  const iconOf = new Map(categories.map((c) => [c.id, c.icon]));
+  const [categories, products] = await Promise.all([getCategories(), getPublicProducts()]);
+  const categoryOf = new Map(categories.map((c) => [c.id, c]));
+  const featured = products.filter((p) => p.featured);
+  const inCategory = (...ids: string[]) => products.filter((p) => ids.includes(p.categoryId));
 
   return (
     <>
-      {/* ---------- hero (bento) ---------- */}
+      {/* ---------- hero ---------- */}
       <section className="container-site pt-6">
-        <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
-          <div className="grid gap-4">
-            <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-charcoal p-8 text-white md:p-12">
-              <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">Wholesale · London · UK-wide</p>
-              <h1 className="mt-5 text-4xl leading-[1.05] font-extrabold md:text-6xl">
-                Brazilian &amp; Portuguese food for UK trade.
-              </h1>
-              <p className="mt-6 max-w-lg leading-relaxed text-white/75">
-                {site.legalName} imports and distributes frozen and chilled favourites to supermarkets, restaurants and
-                independent retailers. Open a free trade account to browse the full catalogue.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/become-a-customer" className="btn-accent">
-                  Open a trade account
-                  <ArrowRight className="size-4" aria-hidden="true" />
-                </Link>
-                <Link href="/products" className="btn bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/15">
-                  See our products
-                </Link>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="card relative p-7">
-                <Link
-                  href="/about"
-                  aria-label="About Brasfood"
-                  className="absolute top-5 right-5 grid size-11 place-items-center rounded-full bg-brand text-white transition-colors hover:bg-brand-strong"
-                >
-                  <ArrowUpRight className="size-5" aria-hidden="true" />
-                </Link>
-                <Globe className="size-7 text-brand" aria-hidden="true" />
-                <p className="mt-8 text-2xl font-bold">Brazil &amp; Portugal</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Imported direct and stored in our London warehouse, ready for your next order.
-                </p>
-              </div>
-              <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-brand p-7 text-white">
-                <Snowflake className="size-7 text-accent" aria-hidden="true" />
-                <p className="mt-8 text-2xl font-bold">Frozen &amp; chilled</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/80">
-                  Cold-chain handling from our warehouse to your door.
-                </p>
-              </div>
+        <div className="relative grid overflow-hidden rounded-[var(--radius-card)] bg-brand text-white lg:grid-cols-[1fr_1.05fr]">
+          <div className="relative z-10 flex flex-col justify-center p-8 md:p-12 lg:py-16">
+            <p className="inline-flex self-start rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent ring-1 ring-white/15">
+              Brazilian &amp; Portuguese food wholesale
+            </p>
+            <h1 className="mt-5 text-4xl leading-[1.05] font-extrabold md:text-5xl xl:text-6xl">
+              The taste of Brazil, <span className="text-accent">delivered to your business</span>
+            </h1>
+            <p className="mt-5 max-w-lg leading-relaxed text-white/75">
+              Linguiças, queijos, açaí, polpas, mandioca and more — imported and distributed from London to shops,
+              butchers and restaurants across the UK.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/become-a-customer" className="btn-accent">
+                Open a trade account
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+              <Link href="/products" className="btn bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/20">
+                Browse products
+              </Link>
             </div>
           </div>
-
-          {/* parede de categorias: faz o papel da foto grande enquanto as fotos não chegam */}
-          <div className="card relative flex flex-col overflow-hidden p-8 md:p-10">
-            <h2 className="text-center text-3xl font-extrabold md:text-4xl">A taste of home, by the case</h2>
-            <p className="mx-auto mt-3 max-w-sm text-center text-sm text-muted">
-              Cheese, ready meals, cassava, fruit pulps, savouries and more — everything your customers ask for.
-            </p>
-            <ul className="mt-8 grid flex-1 content-center grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
-              {categories.slice(0, 8).map((category) => (
-                <li key={category.id}>
-                  <Link
-                    href={`/products?category=${category.slug}`}
-                    className="group flex h-full flex-col items-center gap-2 rounded-2xl p-2 text-center transition-colors hover:bg-surface-2"
-                  >
-                    <CategoryIconBadge icon={category.icon} className="aspect-square w-full" />
-                    <span className="text-xs font-medium text-ink-soft group-hover:text-brand">{category.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
-              <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-2 text-sm font-medium">
-                <BadgeCheck className="size-4 text-brand" aria-hidden="true" />
-                Trusted importer
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-2 text-sm font-medium">
-                <Truck className="size-4 text-brand" aria-hidden="true" />
-                UK-wide delivery
-              </span>
-            </div>
+          <div className="relative min-h-72 lg:min-h-[28rem]">
+            <Image
+              src="/images/banners/hero-collage.webp"
+              alt="Brazilian food: açaí, fruit, pamonha, linguiça and cheese bread"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+            {/* emenda o verde do texto com a foto */}
+            <div className="absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-brand to-transparent lg:block" />
           </div>
         </div>
       </section>
 
-      {/* ---------- diferenciais ---------- */}
-      <section className="container-site mt-24" aria-labelledby="why">
-        <div className="max-w-2xl">
-          <p className="eyebrow">Why Brasfood</p>
-          <h2 id="why" className="mt-3 text-3xl font-extrabold md:text-4xl">
-            A specialist distributor, not a generalist.
-          </h2>
-        </div>
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { icon: Globe, title: "Direct imports", text: "Products sourced from Brazil and Portugal, with the brands Brazilian and Portuguese customers already know." },
-            { icon: Warehouse, title: "London warehouse", text: "Frozen, chilled and ambient stock held in NW10, so orders go out quickly." },
-            { icon: Truck, title: "Delivery across the UK", text: "Regular London routes, plus nationwide delivery quoted with your invoice." },
-            { icon: Lock, title: "Trade-only catalogue", text: "Codes, pack sizes and availability are reserved for approved business customers." },
-          ].map(({ icon: Icon, title, text }) => (
-            <li key={title} className="card p-7">
-              <span className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand">
-                <Icon className="size-6" aria-hidden="true" />
-              </span>
-              <h3 className="mt-6 text-lg font-bold">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
+      {/* ---------- categorias em círculo ---------- */}
+      <section className="container-site mt-10" aria-label="Categories">
+        <ul className="flex gap-4 overflow-x-auto pb-2 lg:grid lg:grid-cols-7 lg:overflow-visible">
+          {categories.map((c) => (
+            <li key={c.id} className="shrink-0">
+              <Link href={`/products?category=${c.slug}`} className="group flex w-28 flex-col items-center gap-3 text-center lg:w-auto">
+                <span className="relative size-24 overflow-hidden rounded-full bg-surface-2 ring-1 ring-line transition-shadow group-hover:ring-2 group-hover:ring-brand md:size-28">
+                  {c.image && <Image src={c.image} alt="" fill sizes="112px" className="object-contain p-3" />}
+                </span>
+                <span className="text-sm font-semibold group-hover:text-brand">{c.name}</span>
+              </Link>
             </li>
           ))}
         </ul>
       </section>
 
       {/* ---------- destaques ---------- */}
-      <section className="container-site mt-24" aria-labelledby="featured">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-2xl">
-            <p className="eyebrow">Featured products</p>
-            <h2 id="featured" className="mt-3 text-3xl font-extrabold md:text-4xl">
-              Best sellers across our range
-            </h2>
-          </div>
-          <Link href="/products" className="btn-light">
-            View all products
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
+      <section className="container-site mt-16" aria-labelledby="featured">
+        <SectionHeader id="featured" eyebrow="Best sellers" title="Customer favourites" action={{ href: "/products", label: "View all" }} />
+        <ProductRow products={featured} categoryOf={categoryOf} />
+      </section>
+
+      {/* ---------- par de banners ---------- */}
+      <section className="container-site mt-16 grid gap-4 lg:grid-cols-2" aria-label="Promotions">
+        <PromoBanner
+          tone="lime"
+          title={<>Açaí all year round</>}
+          text="Mais Fruta and Tastecraft açaí with guaraná, from 200 ml cups to 3.6 kg tubs."
+          href="/products?category=acai"
+          cta="See açaí & creams"
+          image="/images/banners/category-d.webp"
+          imageAlt="Açaí cream tubs in several sizes"
+        />
+        <PromoBanner
+          tone="red"
+          title={<>Ten tropical fruit pulps</>}
+          text="Maracujá, açaí, cupuaçu, manga, caju, graviola and more — 5 x 400 g packs."
+          href="/products?category=fruit-pulp"
+          cta="See fruit pulps"
+          image="/images/banners/category-e.webp"
+          imageAlt="Mais Fruta frozen fruit pulp packs"
+        />
+      </section>
+
+      {/* ---------- vitrine por categoria ---------- */}
+      <section className="container-site mt-16" aria-labelledby="range">
+        <SectionHeader id="range" title="Explore our range" action={{ href: "/products", label: "View all" }} />
+        <RangeTabs categories={categories} products={products} />
+      </section>
+
+      {/* ---------- parceiros ---------- */}
+      <section className="mt-16 bg-surface-2 py-12" aria-labelledby="partners">
+        <div className="container-site">
+          <h2 id="partners" className="text-center text-2xl font-bold">
+            Trusted by Brazilian butchers and grocers across the UK
+          </h2>
+          <ul className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-7">
+            {partners.map((p) => (
+              <li key={p.name} className="grid h-28 place-items-center rounded-2xl bg-white p-4 ring-1 ring-line">
+                <Image src={p.logo} alt={p.name} width={160} height={96} className="max-h-20 w-auto object-contain opacity-90 grayscale transition hover:opacity-100 hover:grayscale-0" />
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {featured.slice(0, 8).map((product) => (
-            <li key={product.id} className="card overflow-hidden">
-              <ProductVisual
-                image={product.image}
-                name={product.name}
-                icon={iconOf.get(product.categoryId) ?? "grocery"}
-                className="m-2 aspect-square rounded-[1.25rem]"
-              />
-              <div className="px-5 pt-2 pb-5">
-                <p className="text-xs font-medium text-muted">{product.brand}</p>
-                <h3 className="mt-1 leading-snug font-semibold">{product.name}</h3>
-                <div className="mt-3">
-                  <StorageTag storage={product.storage} />
-                </div>
+      </section>
+
+      {/* ---------- destaque: açougue ---------- */}
+      <section className="container-site mt-16" aria-labelledby="butcher">
+        <div className="grid gap-4 lg:grid-cols-[1fr_2.4fr]">
+          <div className="relative flex min-h-80 flex-col overflow-hidden rounded-[var(--radius-card)] bg-accent p-7">
+            <h2 id="butcher" className="relative z-10 text-3xl leading-tight font-extrabold">
+              Stock your butcher counter
+            </h2>
+            <p className="relative z-10 mt-3 max-w-xs text-sm text-ink-soft">
+              Artisan linguiças, carne seca, bacon and the feijoada kit your customers ask for every week.
+            </p>
+            <Link href="/products?category=sausages" className="btn-primary relative z-10 mt-5 self-start">
+              Shop sausages
+            </Link>
+            <div className="relative mt-6 -mr-7 -mb-7 min-h-44 flex-1">
+              <Image src="/images/banners/category-j.webp" alt="Brazilian artisan sausages" fill sizes="(min-width: 1024px) 25vw, 100vw" className="rounded-tl-2xl object-cover" />
+            </div>
+          </div>
+          <ProductRow products={inCategory("sausages", "charcuterie").slice(0, 4)} categoryOf={categoryOf} columns="sm:grid-cols-2 xl:grid-cols-4" bare />
+        </div>
+      </section>
+
+      {/* ---------- diferenciais ---------- */}
+      <section className="container-site mt-16" aria-label="Why Brasfood">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { icon: Snowflake, title: "Cold-chain delivery", text: "Frozen and chilled goods kept at temperature from our warehouse to yours." },
+            { icon: ShieldCheck, title: "Trade-only pricing", text: "Prices and pack sizes for approved business customers." },
+            { icon: Globe, title: "Imported direct", text: "The brands Brazilian and Portuguese customers already know." },
+            { icon: Truck, title: "London & UK-wide", text: "London routes, plus nationwide delivery quoted with your invoice." },
+          ].map(({ icon: Icon, title, text }) => (
+            <li key={title} className="flex gap-4 rounded-2xl p-5 ring-2 ring-accent">
+              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-accent-soft text-brand">
+                <Icon className="size-6" aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="font-bold">{title}</h3>
+                <p className="mt-1 text-sm text-muted">{text}</p>
               </div>
             </li>
           ))}
         </ul>
-        <p className="mt-6 flex items-center gap-2 text-sm text-muted">
-          <Lock className="size-4 text-brand" aria-hidden="true" />
-          Product codes, pack sizes and availability are in the{" "}
-          <Link href="/login" className="font-semibold text-brand underline-offset-4 hover:underline">
-            customer portal
-          </Link>
-          .
-        </p>
       </section>
 
-      {/* ---------- como funciona ---------- */}
-      <section className="container-site mt-24" aria-labelledby="how">
-        <div className="rounded-[var(--radius-card)] bg-brand p-8 text-white md:p-14">
-          <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">How it works</p>
-          <h2 id="how" className="mt-3 max-w-2xl text-3xl font-extrabold md:text-4xl">
-            From sign-up to your first order
+      {/* ---------- congelados e mandioca ---------- */}
+      <section className="container-site mt-16" aria-labelledby="frozen">
+        <SectionHeader id="frozen" eyebrow="From the freezer" title="Savouries, pamonha & cassava" action={{ href: "/products?category=frozen", label: "View all" }} />
+        <ProductRow products={inCategory("frozen", "cassava")} categoryOf={categoryOf} />
+      </section>
+
+      {/* ---------- equipe (no lugar dos depoimentos) ---------- */}
+      <section className="mt-16 bg-surface-2 py-14" aria-labelledby="team">
+        <div className="container-site">
+          <h2 id="team" className="text-center text-2xl font-bold md:text-3xl">
+            The people behind your orders
           </h2>
-          <ol className="mt-10 grid gap-6 md:grid-cols-4">
-            {[
-              { title: "Register your business", text: "Tell us about your company — it takes about two minutes." },
-              { title: "We review it", text: "Our team checks every request, usually within one working day." },
-              { title: "Get catalogue access", text: "You'll get an email as soon as your account is approved." },
-              { title: "Place your orders", text: "Order online, by email or with your account manager." },
-            ].map((step, index) => (
-              <li key={step.title} className="rounded-3xl bg-white/8 p-6 ring-1 ring-white/15">
-                <span className="text-sm font-bold text-accent">0{index + 1}</span>
-                <h3 className="mt-3 text-lg font-bold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/75">{step.text}</p>
+          <p className="mx-auto mt-3 max-w-xl text-center text-muted">
+            A small London team that knows the products — and knows your customers.
+          </p>
+          <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {team.map((person) => (
+              <li key={person.name} className="card overflow-hidden rounded-2xl">
+                <div className="relative aspect-[4/5] bg-surface-2">
+                  <Image src={person.photo} alt={person.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover object-top" />
+                </div>
+                <div className="p-4">
+                  <p className="font-bold">{person.name}</p>
+                  <p className="text-sm text-muted">{person.role}</p>
+                </div>
               </li>
             ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ---------- para quem ---------- */}
-      <section className="container-site mt-24" aria-labelledby="who">
-        <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
-          <div>
-            <p className="eyebrow">Who we supply</p>
-            <h2 id="who" className="mt-3 text-3xl font-extrabold md:text-4xl">
-              Built for businesses that feed the community.
-            </h2>
-            <p className="mt-4 max-w-lg leading-relaxed text-muted">
-              From corner shops to restaurant groups, we supply businesses of every size. If you sell or serve food,
-              you can apply.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/become-a-customer" className="btn-primary">
-                Become a customer
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-              <Link href="/contact" className="btn-light">
-                Talk to sales
-              </Link>
-            </div>
-          </div>
-          <ul className="flex flex-wrap gap-3">
-            {businessTypes
-              .filter((type) => type !== "Other")
-              .map((type, index) => (
-                <li
-                  key={type}
-                  className="card inline-flex items-center gap-3 rounded-full px-5 py-3.5 text-sm font-semibold"
-                >
-                  {index % 2 === 0 ? (
-                    <Store className="size-4 text-brand" aria-hidden="true" />
-                  ) : (
-                    <UtensilsCrossed className="size-4 text-brand" aria-hidden="true" />
-                  )}
-                  {type}
-                </li>
-              ))}
           </ul>
         </div>
       </section>
+
+      {/* ---------- banner largo ---------- */}
+      <section className="container-site mt-16 grid gap-4 lg:grid-cols-[1.6fr_1fr]" aria-label="Open an account">
+        <PromoBanner
+          tone="plum"
+          title={<>Open a trade account — it&apos;s free</>}
+          text="Register your business in two minutes. We review every request, usually within one working day."
+          href="/become-a-customer"
+          cta="Become a customer"
+          image="/images/banners/category-g.webp"
+          imageAlt="Queijo minas and coalho cheeses"
+        />
+        <div className="relative min-h-64 overflow-hidden rounded-[var(--radius-card)] bg-charcoal text-white">
+          <Image src="/images/banners/cargo-ship.webp" alt="Container ship at sea" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover opacity-55" />
+          <div className="relative flex h-full flex-col justify-end p-7">
+            <BadgeCheck className="size-8 text-accent" aria-hidden="true" />
+            <p className="mt-3 text-2xl font-extrabold">Imported direct from Brazil</p>
+            <Link href="/about" className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">
+              About Brasfood
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- cremes e polpas ---------- */}
+      <section className="container-site mt-16" aria-labelledby="acai">
+        <SectionHeader id="acai" eyebrow="Summer best sellers" title="Açaí, creams & fruit pulps" action={{ href: "/products?category=acai", label: "View all" }} />
+        <ProductRow products={inCategory("acai", "fruit-pulp").filter((_, i) => i % 2 === 0)} categoryOf={categoryOf} />
+      </section>
+
+      {/* ---------- perguntas ---------- */}
+      <section className="container-site mt-16 max-w-4xl" aria-labelledby="faq">
+        <h2 id="faq" className="text-center text-2xl font-bold md:text-3xl">
+          Answers to common questions
+        </h2>
+        <div className="mt-8 grid gap-3">
+          {faqs.map((item, index) => (
+            <details key={item.q} className="group card rounded-2xl" open={index === 0}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-semibold">
+                {item.q}
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-2 text-lg transition-transform group-open:rotate-45" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <p className="px-5 pb-5 text-sm leading-relaxed text-muted">{item.a}</p>
+            </details>
+          ))}
+        </div>
+        <p className="mt-6 text-center text-sm text-muted">
+          Still have questions?{" "}
+          <Link href="/contact" className="font-semibold text-brand hover:underline">
+            Contact our sales team
+          </Link>{" "}
+          or call {site.phone}.
+        </p>
+      </section>
+
+      {/* ---------- chamada final ---------- */}
+      <section className="container-site mt-16" aria-labelledby="cta">
+        <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-accent-soft px-6 py-14 text-center">
+          <div className="pointer-events-none absolute inset-y-0 -left-10 hidden w-72 md:block">
+            <Image src="/images/products/maracuja-1.webp" alt="" fill sizes="288px" className="object-contain mix-blend-multiply" />
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 -right-10 hidden w-72 md:block">
+            <Image src="/images/products/queijo-minas-padrao.webp" alt="" fill sizes="288px" className="object-contain mix-blend-multiply" />
+          </div>
+          <h2 id="cta" className="relative text-3xl font-extrabold md:text-4xl">
+            Get the full <span className="text-brand">Brasfood catalogue</span>
+          </h2>
+          <p className="relative mx-auto mt-3 max-w-md text-muted">
+            Trade prices, product codes and pack sizes for every line, in one place.
+          </p>
+          <Link href="/become-a-customer" className="btn-primary relative mt-7">
+            Open a free account
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
     </>
+  );
+}
+
+function ProductRow({
+  products,
+  categoryOf,
+  columns = "sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6",
+  bare = false,
+}: {
+  products: PublicProduct[];
+  categoryOf: Map<string, Category>;
+  columns?: string;
+  bare?: boolean;
+}) {
+  return (
+    // no celular vira carrossel com rolagem lateral, no desktop uma grade
+    <ul className={`${bare ? "" : "mt-6 "}-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:overflow-visible sm:px-0 ${columns}`}>
+      {products.slice(0, 6).map((p) => (
+        <li key={p.id} className="w-44 shrink-0 snap-start sm:w-auto">
+          <ProductCard product={p} category={categoryOf.get(p.categoryId)} />
+        </li>
+      ))}
+    </ul>
   );
 }

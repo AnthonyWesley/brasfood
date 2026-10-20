@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
-/* Brasfood — claro e premium. Base off-white quente, blocos arredondados ("bento"),
-   verde-bandeira profundo como cor da marca, amarelo para destaque pontual e um carvão
-   para os painéis escuros. Sem tema escuro: é um site comercial de luz. */
+/* Brasfood v2 — vitrine no estilo Freshora: fundo branco, cards com borda fina,
+   verde-escuro da marca, verde-limão para destaque e seções alternando com um cinza-verde
+   bem claro. Sem tema escuro: é um site comercial de luz. */
 
 :root {
   color-scheme: light;
 
-  --bg: #f4f2eb;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #ebe8de;
-  --ink: #1b1d19;
-  --ink-soft: #3b3f37;
-  --muted: #676c61;
-  --line: #dedad0;
+  --surface-2: #f3f6f1;
+  --ink: #14211b;
+  --ink-soft: #34433b;
+  --muted: #66736b;
+  --line: #e2e8e1;
 
-  --brand: #17633a;
-  --brand-strong: #0f4a2a;
-  --brand-soft: #dcebdf;
-  --accent: #f2c230;
-  --accent-soft: #fbefc4;
-  --charcoal: #24272a;
+  --brand: #0e4d36;
+  --brand-strong: #093826;
+  --brand-soft: #e2efe6;
+  --accent: #a6d14b;
+  --accent-soft: #eff7dc;
+  --charcoal: #0c2a1e;
 
-  --danger: #b42318;
-  --danger-soft: #fde7e5;
-  --info: #1d4ed8;
-  --info-soft: #e1e9fd;
+  --danger: #d93f3f;
+  --danger-soft: #fde8e7;
+  --info: #1d5fd8;
+  --info-soft: #e3ebfd;
 }
 
 @theme inline {
@@ -49,7 +49,7 @@
 
   --font-sans: var(--font-figtree);
 
-  --radius-card: 1.75rem;
+  --radius-card: 1.25rem;
 }
 
 body {
@@ -79,7 +79,7 @@ p {
 }
 
 @utility card {
-  @apply rounded-[var(--radius-card)] bg-surface;
+  @apply rounded-[var(--radius-card)] bg-surface ring-1 ring-line;
 }
 
 @utility eyebrow {

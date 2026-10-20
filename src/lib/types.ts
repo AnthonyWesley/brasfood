@@ -7,9 +7,15 @@ export type Category = {
   id: string;
   slug: string;
   name: string;
+  /** como o cliente brasileiro/português conhece a categoria */
+  namePt: string;
   description: string;
-  /** nome do ícone em src/components/category-icon.tsx */
+  /** ícone em src/components/product-visual.tsx */
   icon: CategoryIcon;
+  /** banner da categoria (peças "Top Brazil" do site atual) */
+  banner: string | null;
+  /** foto de produto que representa a categoria nos círculos da home */
+  image: string | null;
 };
 
 export type CategoryIcon =
@@ -22,7 +28,8 @@ export type CategoryIcon =
   | "bakery"
   | "snack"
   | "drink"
-  | "grocery";
+  | "grocery"
+  | "dessert";
 
 export type ProductBadge = "new" | "out-of-stock" | "coming-soon";
 
@@ -32,7 +39,8 @@ export type Product = {
   /** código interno da Brasfood, o que o cliente usa no pedido */
   code: string;
   name: string;
-  brand: string;
+  /** null quando nem o nome nem a embalagem dizem a marca */
+  brand: string | null;
   categoryId: string;
   storage: Storage;
   /** unidade de venda: "1 kg", "500 g", "12 x 400 g" */
@@ -53,7 +61,7 @@ export type Product = {
 };
 
 /** O que a página pública pode ver de um produto: nada de código, embalagem ou preço. */
-export type PublicProduct = Pick<Product, "id" | "name" | "brand" | "categoryId" | "storage" | "image">;
+export type PublicProduct = Pick<Product, "id" | "slug" | "name" | "brand" | "categoryId" | "storage" | "unit" | "image" | "featured">;
 
 export const businessTypes = [
   "Supermarket",
